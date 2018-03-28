@@ -4,29 +4,41 @@ using UnityEngine;
 
 public class MANDFRED_script : MonoBehaviour {
 
+
     public float Speed;
     public float jumpPower;
     public bool isTouchingGround;
-    public GameObject[] jumpRayOrigins;
+    public bool hatIsOnHead;
     public float distToGround;
     public float slowDownSpeed;
     public float floatPower;
     public float fallPower;
+    public GameObject hatThrown;
+
+
+    GameObject[] jumpRayOrigins;
+    Rigidbody2D rbody;
+    GameObject hatOnhead;
+    
+
+    Vector3 gpos;
+
+
+    // debug values
     public float debugAxis;
     public bool debug1;
     public bool debug2;
     public bool debug3;
     public bool debug4;
+
+
     
 
-
-    Rigidbody2D rbody;
-
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         rbody = gameObject.GetComponent<Rigidbody2D>();
         jumpRayOrigins = GameObject.FindGameObjectsWithTag("JumpRayOrigin");
-
+        hatOnhead = GameObject.Find("HatOnHead");
     }
 	
 	// Update is called once per frame
@@ -36,8 +48,24 @@ public class MANDFRED_script : MonoBehaviour {
         debug1 = Input.GetKey("a");
         debug2 = Input.GetKey("d");
 
+        gpos = gameObject.transform.position;
+
         checkForColisions();
         Movement();
+
+        if (hatOnhead.activeSelf)
+        {
+            hatIsOnHead = true;
+        }
+        else
+        {
+            hatIsOnHead = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Mouse0) && hatIsOnHead)
+        {
+            throwHat();
+        }
     }
 
     void checkForColisions()
@@ -109,8 +137,16 @@ public class MANDFRED_script : MonoBehaviour {
             {
                 rbody.AddForce(new Vector2(0, floatPower));
             }          
-        }
+        } 
     }
+
+    void throwHat()
+    {
+        Instantiate(hatThrown, new Vector3(gpos.x, gpos.y, -9f), Quaternion.identity);
+    }
+
+
+
 
 
 }
